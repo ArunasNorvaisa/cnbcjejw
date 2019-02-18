@@ -1,0 +1,37 @@
+{
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true,
+      "jsx": true,
+      "spread": true,
+      "restParams": true,
+      "modules": true
+    },
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "jest": true
+  },
+  "extends": ["airbnb", "prettier"],
+  "plugins": ["prettier"],
+  "rules": {
+    "react/jsx-filename-extension": "off",
+    "prettier/prettier": ["error"],
+    "import/no-extraneous-dependencies": "warn",
+    "global-require": "warn",
+    "react/forbid-prop-types": "warn",
+    "react/react-in-jsx-scope": "off",
+    "import/prefer-default-export": "warn",
+    "lines-between-class-members": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "react/destructuring-assignment": "off",
+    "no-use-before-define": "off",
+    "consistent-return": "off",
+    "prefer-destructuring": "off"
+  }
+}
