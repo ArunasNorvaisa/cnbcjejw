@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styles from './autocomplete.css';
 
-class Autocomplete extends Component {
+class Autocomplete extends React.Component {
     state = {
         results: [],
         searchTerm: '',
@@ -49,21 +49,33 @@ class Autocomplete extends Component {
         if (value.length >= 3) this.fetchMovies(value);
     }
 
+    handleErrors(response) {
+        if (!response.ok) {
+            this.setState({ error, active: true });
+            throw Error(response.statusText);
+        }
+        return response;
+    }
+
     fetchMovies = text => {
         const url = 'https://api.themoviedb.org/3/search/movie?'
         + `api_key=${this.API_KEY}`
-        + `&language=en-US&query=${text}`
+        //The following line avoids strange behavior (or even errors in render())
+        //when entering %90, &api_key or similar into search field
+        + `&language=en-US&query=${encodeURIComponent("" + text || "").trim()}`
         + '&page=1&include_adult=false';
 
+        try {
         fetch(url)
+            .then(this.handleErrors)
             .then(response => response.json())
             .then(data =>
                 this.setState({
                     results: data.results.slice(0, this.MAX_RESULTS),
                     error: data.results.length < 1 ? "Your search returned no results" : ""
                 }),
-            )
-            .catch(error => this.setState({ error, active: true }));
+            )}
+        catch(error) {this.setState({ error, active: true })};
     }
 
     render() {
