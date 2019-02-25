@@ -51,7 +51,7 @@ class Autocomplete extends React.Component {
 
     handleErrors(response) {
         if (!response.ok) {
-            this.setState({ error, active: true });
+            this.setState({ error: response.statusText, active: true });
             throw Error(response.statusText);
         }
         return response;
