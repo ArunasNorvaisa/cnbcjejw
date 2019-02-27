@@ -44,28 +44,26 @@ class Autocomplete extends React.Component {
             results: value.length >= 3 ? this.state.results : [],
             searchTerm: value,
             active: value.length > 0,
-            error: value.length < 3 ? "Please enter at least 3 characters" : ""
+            error: value.trim().length < 3 ? "Please enter at least 3 characters" : ""
         });
-        if (value.length >= 3) this.fetchMovies(value);
+        if (value.trim().length >= 3) this.fetchMovies(value);
     }
 
     handleErrors(response) {
         if (!response.ok) {
-            this.setState({ error: response.statusText, active: true });
-            throw Error(response.statusText);
+            throw new Error(response.statusText);
         }
         return response;
     }
 
     fetchMovies = text => {
         const url = 'https://api.themoviedb.org/3/search/movie?'
-        + `api_key=${this.API_KEY}`
-        //The following line avoids strange behavior (or even errors in render())
+        + `api_key=${this.API_KEY}&language=en-US`
+        //The following line avoids strange behavior (or even render() crash)
         //when entering %90, &api_key or similar into search field
-        + `&language=en-US&query=${encodeURIComponent("" + text || "").trim()}`
+        + `&query=${encodeURIComponent(text)}`
         + '&page=1&include_adult=false';
 
-        try {
         fetch(url)
             .then(this.handleErrors)
             .then(response => response.json())
@@ -73,9 +71,9 @@ class Autocomplete extends React.Component {
                 this.setState({
                     results: data.results.slice(0, this.MAX_RESULTS),
                     error: data.results.length < 1 ? "Your search returned no results" : ""
-                }),
-            )}
-        catch(error) {this.setState({ error, active: true })};
+                })
+            )
+            .catch(error => this.setState({ error: error.toString() }));
     }
 
     render() {
