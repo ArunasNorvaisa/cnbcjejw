@@ -59,8 +59,8 @@ class Autocomplete extends React.Component {
     fetchMovies = text => {
         const url = 'https://api.themoviedb.org/3/search/movie?'
         + `api_key=${this.API_KEY}&language=en-US`
-        //The following line avoids strange behavior (or even render() crash)
-        //when entering %90, &api_key or similar into search field
+        //The following line prevents users enter potentially harmful
+        //characters (&, %, # etc.) into search field.
         + `&query=${encodeURIComponent(text)}`
         + '&page=1&include_adult=false';
 
